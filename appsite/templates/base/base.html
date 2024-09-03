@@ -1,0 +1,22 @@
+{% load static %}
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ pagename }}</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% include 'base/header.html' %}
+
+{% block content %}
+<h1> Контент отсутствует </h1>
+{% endblock %}
+
+{% include 'base/footer.html' %}
+</body>
+</html>
