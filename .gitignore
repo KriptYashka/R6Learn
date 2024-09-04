@@ -258,3 +258,6 @@ fabric.properties
 
 !.idea/codeStyles
 !.idea/runConfigurations
+
+appsite/migrations
+appsite/static

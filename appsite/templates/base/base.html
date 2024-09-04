@@ -1,12 +1,11 @@
 {% load static %}
 {% load django_bootstrap5 %}
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <title>{{ pagename }}</title>
     {% bootstrap_css %}
-    {% bootstrap_javascript %}
+    <link href="{% static 'css/learn/background.css' %}" rel="stylesheet">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -19,4 +18,5 @@
 
 {% include 'base/footer.html' %}
 </body>
+{% bootstrap_javascript %}
 </html>
