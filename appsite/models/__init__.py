@@ -1,1 +1,1 @@
-from .map_models import Map, MapPlace, MapStats, MapPlaceImg
+from .models_map import Map, MapPlace, MapStats, MapPlaceImg
