@@ -1,1 +1,12 @@
 {% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<div class="card">
+  <img src="{{map.img.url}}" class="card-img-top" alt="Map-{{map.title}}">
+  <div class="card-body">
+    <h5 class="card-title">{{map.title}}</h5>
+    <p class="card-text">Статистика по карте</p>
+    <a href="#" class="btn btn-primary">Изучить</a>
+  </div>
+</div>
+{% endblock %}

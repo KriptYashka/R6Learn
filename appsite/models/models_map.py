@@ -6,8 +6,10 @@ from django.db.models import CASCADE
 
 from django.utils.translation import gettext_lazy
 
+
 def get_place_img_upload_path(instance, filename: str):
     return f"maps/{instance.place.map.title}/{instance.place.level}/{filename}"
+
 
 class Map(models.Model):
     title = models.CharField(max_length=32)
@@ -20,6 +22,7 @@ class MapStats(models.Model):
     win_atk = models.IntegerField()
     win_def = models.IntegerField()
 
+
 class Level(models.TextChoices):
     """
     Перечисление этажей карты.
@@ -31,6 +34,7 @@ class Level(models.TextChoices):
     F1 = "1F", gettext_lazy("First floor")
     F2 = "2F", gettext_lazy("Second floor")
     F3 = "3F", gettext_lazy("Third floor")
+
 
 class MapPlace(models.Model):
     """
@@ -45,6 +49,7 @@ class MapPlace(models.Model):
         default=Level.UNKNOWN,
     )
 
+
 class MapPlaceImg(models.Model):
     """
     Изображение места
@@ -55,4 +60,3 @@ class MapPlaceImg(models.Model):
 
     # Порядок отображения
     is_spectator = models.BooleanField(blank=True, null=False, default=False)
-
