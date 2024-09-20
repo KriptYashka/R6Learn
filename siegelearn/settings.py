@@ -16,7 +16,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_bootstrap5',
     'appsite',
 ]
 
@@ -81,12 +80,11 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static/',
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'appsite', 'static')
+]
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'appsite', 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,3 +1,9 @@
 from django.contrib import admin
+from appsite.models.models_map import Map
 
-# Register your models here.
+
+class AdminMap(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(Map)

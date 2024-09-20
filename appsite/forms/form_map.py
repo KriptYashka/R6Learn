@@ -1,6 +1,9 @@
 from django import forms
 
+from appsite.models import Map
 
-class FormMap(forms.Form):
-    title = forms.CharField(max_length=32)
-    img = forms.ImageField(allow_empty_file=True)
+
+class FormMap(forms.ModelForm):
+    class Meta:
+        model = Map
+        fields = '__all__'

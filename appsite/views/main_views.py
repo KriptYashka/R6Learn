@@ -1,4 +1,5 @@
 from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from appsite.forms import FormMap
@@ -22,20 +23,15 @@ def check_place_page(request: WSGIRequest, map_name: str):
 
 def create_map_page(request: WSGIRequest):
     template_name = "main/map_create.html"
-    context = {
-        "form": FormMap(request.GET)
-    }
+    context = dict()
     if request.method == "GET":
+        context["form"] = FormMap()
         return render(request, template_name, context)
-    # print(request.POST)
-    form = FormMap(request.POST)
-    # print(form)
-    # print(f"{form.is_valid()} - валидность формы")
-    # print(f"{form.errors} - ошибки")
-    if True:
-        title = form.data['title'].lower()
-        img = form.data['img']
-        Map(title=title, img=img).save()
+
+    form = FormMap(request.POST, request.FILES)
+    if form.is_valid():
+        instance = Map(title=form.data["title"].lower(), img=request.FILES["img"])
+        instance.save()
     else:
         context["errors"] = form.errors
     return render(request, template_name, context)

@@ -13,7 +13,7 @@ def get_place_img_upload_path(instance, filename: str):
 
 class Map(models.Model):
     title = models.CharField(max_length=32)
-    img = models.ImageField(upload_to="maps/holders")
+    img = models.ImageField(upload_to="maps/holders", blank=True)
 
 
 class MapStats(models.Model):
