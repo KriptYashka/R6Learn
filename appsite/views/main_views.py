@@ -1,5 +1,4 @@
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from appsite.forms import FormMap
