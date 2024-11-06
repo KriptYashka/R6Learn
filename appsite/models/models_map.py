@@ -18,9 +18,9 @@ class Map(models.Model):
 
 class MapStats(models.Model):
     map = models.ForeignKey(Map, models.CASCADE)
-    description = models.CharField(max_length=2000)
-    win_atk = models.IntegerField()
-    win_def = models.IntegerField()
+    description = models.CharField(max_length=2000, null=True)
+    win_atk = models.IntegerField(null=True)
+    win_def = models.IntegerField(null=True)
 
 
 class Level(models.TextChoices):

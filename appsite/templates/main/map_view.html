@@ -2,19 +2,40 @@
 {% load static %}
 {% block content %}
 <div class="container-md">
+  <h1 class="display-5 text-uppercase">{{ map.title }}</h1>
   <div class="row">
-    <!-- Блок с названием и изображением -->
-    <div class="col-3">
-      <h1>{{ map.title }}</h1>
+    <!-- Блок с изображением -->
+    <div class="col-4">
       <img src="/media/{{ map.img }}" class="img-fluid" alt="Фон карты '{{ map.title }}'">
+      <div class="col pt-2">
+        <h4 class="text-secondary">Информация:</h4>
+      </div>
     </div>
     <!-- Блок описанием и статистикой -->
-    <div class="col-9">
+    <div class="col-8 mt-3">
       <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar" style="width: 25%; background-color: #0672c9">ATK</div>
         <div class="progress-bar" style="width: 75%; background-color: #d8620b">DEF</div>
       </div>
-      <div class="col">Описание карты</div>
+      <div class="col">
+        {% if map.description %}}
+        {{ map.description }}
+        {% else %}
+        Описание карты отсутствует.
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="col">
+    <h1 class="text-center">Планировка</h1>
+    <div class="row">
+    {% for level in levels %}
+      <div class="col-md-6 col-lg-3">
+        <img src="https://i.ytimg.com/vi/fCcosDGKCNM/maxresdefault.jpg" class="img-fluid">
+        <p class="text-center">Позиция {{level}}</p>
+      </div>
+    {% endfor %}
     </div>
   </div>
 </div>
