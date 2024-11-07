@@ -11,6 +11,8 @@ from django.shortcuts import get_object_or_404
 def index_page(request: WSGIRequest):
     template_name = "main/index.html"
     context = {}
+    maps = Map.objects.all()
+    context["maps"] = maps
     return render(request, template_name, context)
 
 
