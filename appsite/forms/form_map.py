@@ -11,4 +11,4 @@ class FormMap(forms.ModelForm):
 class FormMapStats(forms.ModelForm):
     class Meta:
         model = MapStats
-        fields = '__all__'
+        fields = ["description", "win_atk"]

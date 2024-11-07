@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="col-4 py-5 mx-auto">
+    <img src="/media/{{ holder }}" class="img-fluid" alt="Нет изображения">
+    <form class="form-control" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form_map.as_p }}
+        <hr>
+        {{ form_mapstat.as_p }}
+        <button type="submit" class="btn btn-secondary">Изменить</button>
+    </form>
+</div>
+{% endblock %}
