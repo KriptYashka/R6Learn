@@ -1,14 +1,19 @@
 from django import forms
 
-from appsite.models import Map, MapStats
+from appsite.models import MapModel, MapStatsModel, MapPlaceModel, MapPlaceImgModel
 
 
 class FormMap(forms.ModelForm):
     class Meta:
-        model = Map
+        model = MapModel
         fields = '__all__'
 
 class FormMapStats(forms.ModelForm):
     class Meta:
-        model = MapStats
+        model = MapStatsModel
         fields = ["description", "win_atk"]
+
+class FormPlace(forms.ModelForm):
+    class Meta:
+        model = MapPlaceModel
+        fields = ["name", "description", "level", "is_layout"]

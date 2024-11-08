@@ -2,28 +2,27 @@ import os
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models import CASCADE
 
 from django.utils.translation import gettext_lazy
 
 
 def get_place_img_upload_path(instance, filename: str):
-    return f"maps/{instance.place.map.title}/{instance.place.level}/{filename}"
+    return f"maps/{instance.place.map.name}/{instance.place.level}/{filename}"
 
 
-class Map(models.Model):
+class MapModel(models.Model):
     title = models.CharField(max_length=32)
     img = models.ImageField(upload_to="maps/holders", blank=True)
 
 
-class MapStats(models.Model):
-    map = models.ForeignKey(Map, models.CASCADE)
+class MapStatsModel(models.Model):
+    map = models.ForeignKey(MapModel, models.CASCADE)
     description = models.CharField(max_length=2000, null=True)
     win_atk = models.IntegerField(null=True)
     win_def = models.IntegerField(null=True)
 
 
-class Level(models.TextChoices):
+class LevelModel(models.TextChoices):
     """
     Перечисление этажей карты.
     `gettext_lazy` позволяет выполнить перевод
@@ -36,26 +35,27 @@ class Level(models.TextChoices):
     F3 = "3F", gettext_lazy("Third floor")
 
 
-class MapPlace(models.Model):
+class MapPlaceModel(models.Model):
     """
     Определенное место/позиция на карте
     """
-    map = models.ForeignKey(Map, models.CASCADE)
-    title = models.CharField(max_length=32)
+    map = models.ForeignKey(MapModel, models.CASCADE)
+    name = models.CharField(max_length=32)
     description = models.CharField(max_length=300)
     level = models.CharField(
         max_length=3,
-        choices=Level.choices,
-        default=Level.UNKNOWN,
+        choices=LevelModel.choices,
+        default=LevelModel.UNKNOWN,
     )
+    is_layout = models.BooleanField(blank=True, null=False, default=False)
 
 
-class MapPlaceImg(models.Model):
+class MapPlaceImgModel(models.Model):
     """
     Изображение места
     """
 
-    place = models.ForeignKey(MapPlace, models.CASCADE)
+    place = models.ForeignKey(MapPlaceModel, models.CASCADE)
     img = models.FileField(upload_to=get_place_img_upload_path)
 
     # Порядок отображения
