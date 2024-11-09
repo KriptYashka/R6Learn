@@ -9,6 +9,8 @@ from appsite.models import MapModel, MapStatsModel, MapPlaceModel, MapPlaceImgMo
 
 from django.shortcuts import get_object_or_404
 
+from .tools.map import Map
+
 
 # Create your views here.
 def index_page(request: WSGIRequest):
@@ -58,19 +60,18 @@ def map_edit_page(request: WSGIRequest, title: str):
     template_name = "main/map_edit.html"
     title = title.lower()
 
-    current_map: MapModel = get_object_or_404(MapModel, title=title)
-    current_map_stats: MapStatsModel = MapStatsModel.objects.get(map=current_map)
-    current_places: List[MapPlaceModel] = MapPlaceModel.objects.filter(map=current_map)
+    curr_map = Map()
+    curr_map.extract(title=title)
 
     map_data = {
-        "title": current_map.title,
+        "title": curr_map.title,
     }
     map_stats_data = {
-        "description": current_map_stats.description,
-        "win_atk": current_map_stats.win_atk,
+        "description": curr_map.stats.description,
+        "win_atk": curr_map.stats.win_atk,
     }
     context = {
-        "holder": current_map.img,
+        "holder": curr_map.holder,
         "form_map": FormMap(map_data),
         "form_mapstat": FormMapStats(map_stats_data),
     }
