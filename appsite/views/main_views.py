@@ -80,10 +80,6 @@ def map_edit_page(request: WSGIRequest, title: str):
     form_map, form_map_stats = FormMap(request.POST, request.FILES), FormMapStats(request.POST)
     new_title = check_forms(form_map, form_map_stats, title)
 
-    # Обработка картинок
-
-
-
     return redirect(f"/map/edit/{new_title}")
 
 
