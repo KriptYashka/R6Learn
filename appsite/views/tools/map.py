@@ -6,6 +6,7 @@ from appsite import models
 
 class ModelETL:
     model: Optional[dj_models.Model] = None
+
     def __init__(self):
         pass
 
@@ -23,6 +24,7 @@ class ModelETL:
 
 class Map(ModelETL):
     model = models.MapModel
+
     def __init__(self):
         super().__init__()
         self.title = None
@@ -47,6 +49,7 @@ class Map(ModelETL):
 
 class MapStats(ModelETL):
     model = models.MapStatsModel
+
     def __init__(self, map_obj: Map):
         super().__init__()
         self.map = map_obj
@@ -62,6 +65,7 @@ class MapStats(ModelETL):
 
 class MapPlace(ModelETL):
     model = models.MapPlaceModel
+
     def __init__(self, map_obj: Map):
         super().__init__()
         self.map = map_obj
@@ -78,7 +82,6 @@ class MapPlace(ModelETL):
             img.transform(instance)
             self.images.append(img)
 
-
     def transform(self, instance: models.MapPlaceModel):
         self.map = instance.map
         self.description = instance.description
@@ -88,12 +91,12 @@ class MapPlace(ModelETL):
 
 class MapPlaceImage(ModelETL):
     model = models.MapPlaceImgModel
+
     def __init__(self, map_obj: Map):
         super().__init__()
         self.map = map_obj
         self.img = None
         self.is_spectator = None
-
 
     def transform(self, instance: models.MapPlaceImgModel):
         self.img = instance.img
