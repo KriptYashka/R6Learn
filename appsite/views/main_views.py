@@ -11,8 +11,6 @@ from django.shortcuts import get_object_or_404
 
 from .tools.map import Map
 
-
-# Create your views here.
 def index_page(request: WSGIRequest):
     template_name = "main/index.html"
     context = {}

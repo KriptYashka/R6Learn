@@ -40,7 +40,7 @@ class Map(ModelETL):
         self.stats = MapStats(self)
         self.stats.extract()
 
-        places = MapPlace.model.objects.filter(**kwargs)
+        places = MapPlace.model.objects.filter(map__id=self.instance.id)
         for instance in places:
             place = MapPlace(self)
             place.transform(instance)
@@ -58,7 +58,7 @@ class MapStats(ModelETL):
         self.win_def = -1
 
     def extract(self, **kwargs):
-        instance_stats: MapStats.model = self._get(map=self.map)
+        instance_stats: MapStats.model = self._get(map__id=self.map.instance.id)
         self.description = instance_stats.description
         self.win_atk, self.win_def = instance_stats.win_atk, instance_stats.win_def
 
