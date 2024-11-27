@@ -1,9 +1,14 @@
+import logging
 import os
 import sys
 
 
 def main():
     """Run administrative tasks."""
+    fmt = '[%(levelname)s] %(asctime)s: %(message)s' \
+          'in %(pathname)s:%(lineno)d'
+    logging.basicConfig(level=logging.DEBUG, format=fmt)
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'siegelearn.settings')
     try:
         from django.core.management import execute_from_command_line

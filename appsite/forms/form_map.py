@@ -21,4 +21,4 @@ class FormPlace(forms.ModelForm):
 class FormPlaceImg(forms.ModelForm):
     class Meta:
         model = MapPlaceImgModel
-        fields = ["img", "is_spectator"]
+        fields = "__all__"

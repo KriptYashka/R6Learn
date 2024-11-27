@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 
 from .tools.map import Map
 
+
 def index_page(request: WSGIRequest):
     template_name = "main/index.html"
     context = {}
@@ -53,6 +54,7 @@ def map_view_page(request: WSGIRequest, title: str):
         "levels": [i for i in range(6)]
     }
     return render(request, template_name, context)
+
 
 def map_edit_page(request: WSGIRequest, title: str):
     template_name = "main/map_edit.html"
@@ -100,6 +102,7 @@ def check_forms(form_map, form_map_stats, title):
         map_stat.win_atk = _win_atk
         map_stat.save()
     return title
+
 
 def place_edit_page(request: WSGIRequest, title: str):
     template_name = "main/map_place_edit.html"

@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from django.db import models as dj_models
@@ -38,7 +39,10 @@ class Map(ModelETL):
         self.title, self.holder = self.instance.title, self.instance.img
 
         self.stats = MapStats(self)
-        self.stats.extract()
+        try:
+            self.stats.extract()
+        except:
+            logging.warning(f"Статистика карты {self.instance.id}: {self.instance.title} не найдена.")
 
         places = MapPlace.model.objects.filter(map__id=self.instance.id)
         for instance in places:
