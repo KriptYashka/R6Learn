@@ -17,3 +17,8 @@ class FormPlace(forms.ModelForm):
     class Meta:
         model = MapPlaceModel
         fields = ["name", "description", "level", "is_layout"]
+
+class FormPlaceImg(forms.ModelForm):
+    class Meta:
+        model = MapPlaceImgModel
+        fields = ["img", "is_spectator"]

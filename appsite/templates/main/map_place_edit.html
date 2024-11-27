@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container-md">
+    <h1 class="display-5 text-uppercase">{{ map.title }}</h1>
+</div>
+<div class="col-4 py-3 mx-auto">
+    <form class="form-control" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-secondary">Добавить</button>
+    </form>
+</div>
+{% endblock %}

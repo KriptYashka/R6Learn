@@ -4,7 +4,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect
 
 from appsite.forms import FormMap
-from appsite.forms.form_map import FormMapStats
+from appsite.forms.form_map import FormMapStats, FormPlace, FormPlaceImg
 from appsite.models import MapModel, MapStatsModel, MapPlaceModel, MapPlaceImgModel
 
 from django.shortcuts import get_object_or_404
@@ -71,7 +71,7 @@ def map_edit_page(request: WSGIRequest, title: str):
     context = {
         "holder": curr_map.holder,
         "form_map": FormMap(map_data),
-        "form_mapstat": FormMapStats(map_stats_data),
+        "form_mapstat": FormMapStats(map_stats_data)
     }
     if request.method == "GET":
         return render(request, template_name, context)
@@ -101,3 +101,12 @@ def check_forms(form_map, form_map_stats, title):
         map_stat.save()
     return title
 
+def place_edit_page(request: WSGIRequest, title: str):
+    template_name = "main/map_place_edit.html"
+    map_obj = Map()
+    map_obj.extract(title=title)
+    context = {
+        "map": map_obj,
+        "form": FormPlaceImg()
+    }
+    return render(request, template_name, context)
