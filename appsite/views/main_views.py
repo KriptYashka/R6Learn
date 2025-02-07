@@ -104,6 +104,17 @@ def check_forms(form_map, form_map_stats, title):
     return title
 
 
+def place_create_page(request: WSGIRequest, map_title: str):
+    context = {}
+    template_name = "main/place_create.html"
+    map_obj = get_object_or_404(MapModel, title=map_title.lower())
+    context = {
+        "map": map_obj,
+        "form": FormPlace,
+    }
+    return render(request, template_name, context)
+
+
 def place_edit_page(request: WSGIRequest, title: str):
     template_name = "main/map_place_edit.html"
     map_obj = Map()

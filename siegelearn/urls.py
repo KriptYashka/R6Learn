@@ -15,6 +15,8 @@ urlpatterns = [
     path('map/<str:title>/create', main_views.map_edit_page, name="map_edit"),
     path('map/<str:title>/place/edit', main_views.place_edit_page, name="place_edit"),
 
+    path('map/<str:map_title>/place/create', main_views.place_create_page, name="create_place"),
+
     path('api/map/', map_api.GetMapInfoView.as_view())
 ]
 
