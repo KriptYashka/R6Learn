@@ -105,13 +105,20 @@ def check_forms(form_map, form_map_stats, title):
 
 
 def place_create_page(request: WSGIRequest, map_title: str):
-    context = {}
     template_name = "main/place_create.html"
     map_obj = get_object_or_404(MapModel, title=map_title.lower())
     context = {
         "map": map_obj,
-        "form": FormPlace,
+        "form": FormPlace(),
     }
+    if request.method == "GET":
+        return render(request, template_name, context)
+
+    form = FormPlace(request.POST)
+    if form.is_valid():
+        place = form.save()
+        return redirect(f"/map/{map_title}/place/{place.id}")
+    context["form"] = form
     return render(request, template_name, context)
 
 
