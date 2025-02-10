@@ -116,6 +116,7 @@ def place_create_page(request: WSGIRequest, map_title: str):
 
     form = FormPlace(request.POST)
     if form.is_valid():
+        form.instance.map = map_obj
         place = form.save()
         return redirect(f"/map/{map_title}/place/{place.id}")
     context["form"] = form
