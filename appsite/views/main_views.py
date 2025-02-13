@@ -124,7 +124,7 @@ def place_create_page(request: WSGIRequest, map_title: str):
 
 
 def place_edit_page(request: WSGIRequest, title: str):
-    template_name = "main/map_place_edit.html"
+    template_name = "main/place_edit.html"
     map_obj = Map()
     map_obj.extract(title=title)
     context = {
