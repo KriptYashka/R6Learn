@@ -35,7 +35,7 @@ class LevelModel(models.TextChoices):
     F3 = "3F", gettext_lazy("Third floor")
 
 
-class MapPlaceModel(models.Model):
+class PlaceModel(models.Model):
     """
     Определенное место/позиция на карте
     """
@@ -50,12 +50,12 @@ class MapPlaceModel(models.Model):
     is_layout = models.BooleanField(blank=True, null=False, default=False)
 
 
-class MapPlaceImgModel(models.Model):
+class PlaceImgModel(models.Model):
     """
     Изображение места
     """
 
-    place = models.ForeignKey(MapPlaceModel, models.CASCADE)
+    place = models.ForeignKey(PlaceModel, models.CASCADE)
     img = models.FileField(upload_to=get_place_img_upload_path)
 
     # Порядок отображения

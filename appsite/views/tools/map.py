@@ -68,7 +68,7 @@ class MapStats(ModelETL):
 
 
 class MapPlace(ModelETL):
-    model = models.MapPlaceModel
+    model = models.PlaceModel
 
     def __init__(self, map_obj: Map):
         super().__init__()
@@ -86,7 +86,7 @@ class MapPlace(ModelETL):
             img.transform(instance)
             self.images.append(img)
 
-    def transform(self, instance: models.MapPlaceModel):
+    def transform(self, instance: models.PlaceModel):
         self.map = instance.map
         self.description = instance.description
         self.level = instance.level
@@ -94,7 +94,7 @@ class MapPlace(ModelETL):
 
 
 class MapPlaceImage(ModelETL):
-    model = models.MapPlaceImgModel
+    model = models.PlaceImgModel
 
     def __init__(self, map_obj: Map):
         super().__init__()
@@ -102,6 +102,6 @@ class MapPlaceImage(ModelETL):
         self.img = None
         self.is_spectator = None
 
-    def transform(self, instance: models.MapPlaceImgModel):
+    def transform(self, instance: models.PlaceImgModel):
         self.img = instance.img
         self.is_spectator = instance.is_spectator

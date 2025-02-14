@@ -3,15 +3,19 @@
 
 {% block content %}
 <div class="container-md">
-    {% for map in maps %}
-    <div class="card" style="width: 18rem;">
-      <img src="media/{{ map.img }}" class="card-img-top" alt="{{ map.title }}">
-      <div class="card-body">
-        <h5 class="card-title">{{ map.title|upper }}</h5>
-        <p class="card-text">Описание карты</p>
-        <a href="/map/{{ map.title }}/info" class="btn btn-primary">Перейти</a>
-      </div>
+    <div class="row justify-content-start">
+        {% for map in maps %}
+        <div class="col-md-4 p-1">
+            <div class="card">
+              <img src="media/{{ map.img }}" class="card-img-top" alt="{{ map.title }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ map.title|upper }}</h5>
+                <p class="card-text">Описание карты</p>
+                <a href="/map/{{ map.title }}/info" class="btn btn-primary">Перейти</a>
+              </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}

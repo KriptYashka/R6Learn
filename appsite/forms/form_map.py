@@ -1,6 +1,6 @@
 from django import forms
 
-from appsite.models import MapModel, MapStatsModel, MapPlaceModel, MapPlaceImgModel
+from appsite.models import MapModel, MapStatsModel, PlaceModel, PlaceImgModel
 
 
 class FormMap(forms.ModelForm):
@@ -17,11 +17,11 @@ class FormMapStats(forms.ModelForm):
 
 class FormPlace(forms.ModelForm):
     class Meta:
-        model = MapPlaceModel
+        model = PlaceModel
         fields = ["name", "description", "level", "is_layout"]
 
 
 class FormPlaceImg(forms.ModelForm):
     class Meta:
-        model = MapPlaceImgModel
+        model = PlaceImgModel
         fields = "__all__"

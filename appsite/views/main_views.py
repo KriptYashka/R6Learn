@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from appsite.forms import FormMap
 from appsite.forms.form_map import FormMapStats, FormPlace, FormPlaceImg
-from appsite.models import MapModel, MapStatsModel, MapPlaceModel, MapPlaceImgModel
+from appsite.models import MapModel, MapStatsModel, PlaceModel, PlaceImgModel
 
 from django.shortcuts import get_object_or_404
 
@@ -20,13 +20,7 @@ def index_page(request: WSGIRequest):
     return render(request, template_name, context)
 
 
-def check_place_page(request: WSGIRequest, map_name: str):
-    template_name = "main/map_place.html"
-    context = {}
-    return render(request, template_name, context)
-
-
-def create_map_page(request: WSGIRequest):
+def map_create_page(request: WSGIRequest):
     template_name = "main/map_create.html"
     context = dict()
     if request.method == "GET":
@@ -41,18 +35,9 @@ def create_map_page(request: WSGIRequest):
 
         instance_map.save()
         instance_map_stats.save()
+        return redirect(f"/map/{instance_map.title.lower()}/info")
     else:
         context["errors"] = form.errors
-    return render(request, template_name, context)
-
-
-def map_view_page(request: WSGIRequest, title: str):
-    template_name = "main/map_view.html"
-    current_map = get_object_or_404(MapModel, title=title.lower())
-    context = {
-        "map": current_map,
-        "levels": [i for i in range(6)]
-    }
     return render(request, template_name, context)
 
 
@@ -81,6 +66,16 @@ def map_edit_page(request: WSGIRequest, title: str):
     new_title = check_forms(form_map, form_map_stats, title)
 
     return redirect(f"/map/edit/{new_title}")
+
+
+def map_view_page(request: WSGIRequest, title: str):
+    template_name = "main/map_view.html"
+    current_map = get_object_or_404(MapModel, title=title.lower())
+    context = {
+        "map": current_map,
+        "levels": [i for i in range(6)]
+    }
+    return render(request, template_name, context)
 
 
 def check_forms(form_map, form_map_stats, title):
