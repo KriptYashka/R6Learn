@@ -7,6 +7,9 @@ class FormMap(forms.ModelForm):
     class Meta:
         model = MapModel
         fields = '__all__'
+        widgets = {
+            "img": forms.FileInput(attrs={"class": "form-control", "onchange": "preview(this)"}),
+        }
 
 
 class FormMapStats(forms.ModelForm):

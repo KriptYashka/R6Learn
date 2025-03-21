@@ -260,4 +260,3 @@ fabric.properties
 !.idea/runConfigurations
 
 appsite/migrations
-appsite/static
