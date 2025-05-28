@@ -27,18 +27,19 @@ class LevelModel(models.TextChoices):
     Перечисление этажей карты.
     `gettext_lazy` позволяет выполнить перевод
     """
-    UNKNOWN = "NUL", gettext_lazy("Not defined")
-    BASEMENT = "B", gettext_lazy("Basement")
-    OUTSIDE = "OUT", gettext_lazy("Outside")
-    F1 = "1F", gettext_lazy("First floor")
-    F2 = "2F", gettext_lazy("Second floor")
-    F3 = "3F", gettext_lazy("Third floor")
+    UNKNOWN = "NUL", "N/A"
+    BASEMENT = "B", "Подвал"
+    OUTSIDE = "OUT", "Снаружи"
+    F1 = "1F", "Первый этаж"
+    F2 = "2F", "Второй этаж"
+    F3 = "3F", "Третий этаж"
 
 
 class PlaceModel(models.Model):
     """
     Определенное место/позиция на карте
     """
+    objects = models.Manager()
     map = models.ForeignKey(MapModel, models.CASCADE)
     name = models.CharField(max_length=32)
     description = models.CharField(max_length=300)

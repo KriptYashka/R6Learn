@@ -6,38 +6,150 @@
   <div class="row">
     <!-- Блок с изображением -->
     <div class="col-4">
-      <img src="/media/{{ map.img }}" class="img-fluid" alt="Фон карты '{{ map.title }}'">
+      <img src="/media/{{ map.img }}" class="img-fluid rounded" alt="Фон карты '{{ map.title }}'">
       <div class="col pt-2">
         <h4 class="text-secondary">Информация:</h4>
       </div>
     </div>
     <!-- Блок описанием и статистикой -->
     <div class="col-8 mt-3">
-      <div class="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar" style="width: 25%; background-color: #0672c9">ATK</div>
-        <div class="progress-bar" style="width: 75%; background-color: #d8620b">DEF</div>
+      <div class="progress" role="progressbar" aria-label="Win rates" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: {{ map.mapstatsmodel.win_atk|default:25 }}%; background-color: #0672c9">ATK {{ map.mapstatsmodel.win_atk|default:25 }}%</div>
+        <div class="progress-bar" style="width: {{ map.mapstatsmodel.win_def|default:75 }}%; background-color: #d8620b">DEF {{ map.mapstatsmodel.win_def|default:75 }}%</div>
       </div>
-      <div class="col">
-        {% if map.description %}}
-        {{ map.description }}
+      <div class="col mt-3">
+        {% if map.mapstatsmodel.description %}
+        <p class="lead">{{ map.mapstatsmodel.description }}</p>
         {% else %}
-        Описание карты отсутствует.
+        <p class="text-muted">Описание карты отсутствует.</p>
         {% endif %}
       </div>
     </div>
   </div>
   <hr>
-  <div class="col">
-    <h1 class="text-center">Планировка</h1>
-    <div class="row">
+
+  <!-- Навигация по этажам -->
+  <ul class="nav nav-tabs" id="floorTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="basement-tab" data-bs-toggle="tab" data-bs-target="#basement" type="button" role="tab">Подвал</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="outside-tab" data-bs-toggle="tab" data-bs-target="#outside" type="button" role="tab">Улица</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="f1-tab" data-bs-toggle="tab" data-bs-target="#f1" type="button" role="tab">1 этаж</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="f2-tab" data-bs-toggle="tab" data-bs-target="#f2" type="button" role="tab">2 этаж</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="f3-tab" data-bs-toggle="tab" data-bs-target="#f3" type="button" role="tab">3 этаж</button>
+    </li>
+  </ul>
+
+  <!-- Контент этажей -->
+  <div class="tab-content py-4" id="floorTabsContent">
     {% for level in levels %}
-      <div class="col-md-6 col-lg-3">
-        <img src="https://steamuserimages-a.akamaihd.net/ugc/398930471900304069/E369AA5BEC9DBE9E5A4DD2B686EA12F644DCC661/" class="img-fluid">
-        <p class="text-center">Позиция {{level}}</p>
+    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+         id="{{ level.0 }}"
+         role="tabpanel"
+         aria-labelledby="{{ level.0 }}-tab">
+
+      {% if level.2.exists %}
+      <div class="row">
+        <!-- Левая миниатюра -->
+        <div class="col-md-2 d-flex align-items-center">
+          <div class="position-relative w-100">
+            <img src="/media/{{ level.2.0.first_img.img }}" class="img-fluid opacity-25">
+            <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
+                    onclick="prevImage('{{ level.0 }}')">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Основное изображение -->
+        <div class="col-md-8 text-center">
+          <img id="{{ level.0 }}-main-img"
+               src="/media/{{ level.2.0.first_img.img }}"
+               class="img-fluid rounded shadow-lg">
+          <h4 class="mt-3">{{ level.2.0.name }}</h4>
+          <p>{{ level.2.0.description }}</p>
+        </div>
+
+        <!-- Правая миниатюра -->
+        <div class="col-md-2 d-flex align-items-center">
+          <div class="position-relative w-100">
+            <img src="/media/{{ level.2.1.first_img.img }}" class="img-fluid opacity-25">
+            <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
+                    onclick="nextImage('{{ level.0 }}')">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
       </div>
-    {% endfor %}
+      {% else %}
+      <div class="alert alert-info">
+        Позиции отсутствуют
+      </div>
+      {% endif %}
     </div>
-    <a class="btn btn-primary" href="/map/{{ map.title | lower }}/place/create">Добавить позицию</a>
+    {% endfor %}
+  </div>
+
+  <!-- Кнопка добавления позиции -->
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+    <a class="btn btn-primary" href="/map/{{ map.title|lower }}/place/create">
+      <i class="bi bi-plus-circle"></i> Добавить позицию
+    </a>
   </div>
 </div>
+
+<script>
+// Текущие индексы для каждого этажа
+const currentIndices = {
+  {% for level in levels %}
+  '{{ level.0 }}': 0,
+  {% endfor %}
+};
+
+// Функция для обновления отображения
+function updateFloorDisplay(levelId) {
+  const places = [
+    {% for level in levels %}
+    {% for place in level.2 %}
+    {% if place.first_img %}
+    {
+      id: '{{ level.0 }}',
+      name: '{{ place.name }}',
+      description: '{{ place.description|escapejs }}',
+      img: '/media/{{ place.first_img.img }}'
+    },
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+  ].filter(p => p.id === levelId);
+
+  if (places.length === 0) return;
+
+  const currentIndex = currentIndices[levelId];
+  const currentPlace = places[currentIndex % places.length];
+
+  // Обновляем основное изображение
+  document.getElementById(`${levelId}-main-img`).src = currentPlace.img;
+  document.querySelector(`#${levelId} h4`).textContent = currentPlace.name;
+  document.querySelector(`#${levelId} p`).textContent = currentPlace.description;
+}
+
+// Навигация между изображениями
+function nextImage(levelId) {
+  currentIndices[levelId]++;
+  updateFloorDisplay(levelId);
+}
+
+function prevImage(levelId) {
+  currentIndices[levelId]--;
+  updateFloorDisplay(levelId);
+}
+</script>
 {% endblock %}

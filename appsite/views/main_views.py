@@ -10,6 +10,7 @@ from appsite.models import MapModel, MapStatsModel, PlaceModel, PlaceImgModel
 from django.shortcuts import get_object_or_404
 
 from .tools.map import Map
+from ..models.models_map import LevelModel
 
 
 def index_page(request: WSGIRequest):
@@ -71,9 +72,23 @@ def map_edit_page(request: WSGIRequest, title: str):
 def map_view_page(request: WSGIRequest, title: str):
     template_name = "main/map_view.html"
     current_map = get_object_or_404(MapModel, title=title.lower())
+
+    levels_names = [LevelModel.BASEMENT, LevelModel.OUTSIDE, LevelModel.F1, LevelModel.F2, LevelModel.F3]
+    levels = [
+        (name, name.label, PlaceModel.objects.filter(
+            map=current_map,
+            level=name
+        ).prefetch_related('placeimgmodel_set'))
+        for name in levels_names
+    ]
+
+    for level in levels:
+        for place in level[2]:
+            place.first_img = place.placeimgmodel_set.first()
+
     context = {
         "map": current_map,
-        "levels": [i for i in range(6)]
+        "levels": levels,
     }
     return render(request, template_name, context)
 
