@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy
 
 
 def get_place_img_upload_path(instance, filename: str):
-    return f"maps/{instance.place.map.name}/{instance.place.level}/{filename}"
+    return f"maps/{instance.place.map.title}/{instance.place.level}/{filename}"
 
 
 class MapModel(models.Model):

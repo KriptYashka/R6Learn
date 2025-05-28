@@ -1,14 +1,119 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 {% block content %}
-<div class="container-md">
-    <h1 class="display-5 text-uppercase">{{ map.title }}</h1>
-</div>
-<div class="col-4 py-3 mx-auto">
-    <form class="form-control" action="" method="POST" enctype="multipart/form-data">
+<div class="container-md py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="display-6">Редактирование позиции: {{ place.name }}</h1>
+    <a href="{% url 'map_view' place.map.title %}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Назад к карте
+    </a>
+  </div>
+
+  <div class="row">
+    <!-- Основная форма редактирования -->
+    <div class="col-md-6">
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-secondary">Добавить</button>
-    </form>
+
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            Основная информация
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="name" class="form-label">Название позиции</label>
+              <input type="text" class="form-control" id="name" name="name" value="{{ place.name }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Описание</label>
+              <textarea class="form-control" id="description" name="description" rows="3">{{ place.description }}</textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Этаж</label>
+              <select class="form-select" name="level">
+                {% for level in levels %}
+                <option value="{{ level.0 }}" {% if level.0 == place.level %}selected{% endif %}>
+                  {{ level.1 }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="is_layout" name="is_layout" {% if place.is_layout %}checked{% endif %}>
+              <label class="form-check-label" for="is_layout">Это планировка?</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-lg">Сохранить изменения</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Управление изображениями -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          Управление изображениями
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Добавить новое изображение</h5>
+          <form method="post" enctype="multipart/form-data" action="{% url 'add_place_image' place.id %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <input class="form-control" type="file" name="image" accept="image/*" required>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="is_spectator" name="is_spectator">
+              <label class="form-check-label" for="is_spectator">Вид от наблюдателя</label>
+            </div>
+            <button type="submit" class="btn btn-success">Загрузить</button>
+          </form>
+
+          <hr class="my-4">
+
+          <h5 class="card-title">Текущие изображения</h5>
+          <div class="row">
+            {% for img in place.placeimgmodel_set.all %}
+            <div class="col-md-6 mb-3">
+              <div class="card h-100">
+                <img src="/media/{{ img.img }}" class="card-img-top" alt="Изображение позиции">
+                <div class="card-body">
+                  <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox"
+                           {% if img.is_spectator %}checked{% endif %} disabled>
+                    <label class="form-check-label">Наблюдатель</label>
+                  </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <form method="post" action="{% url 'delete_place_image' img.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      <i class="bi bi-trash"></i> Удалить
+                    </button>
+                  </form>
+                  <form method="post" action="{% url 'set_main_image' img.id %}" class="d-inline ms-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                      Сделать основной
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+              <div class="alert alert-info">Нет загруженных изображений</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
