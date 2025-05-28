@@ -13,7 +13,6 @@ urlpatterns = [
     path('map/create/', main_views.map_create_page, name="map_create"),
     path('map/<str:title>/info', main_views.map_view_page, name="map_view"),
     path('map/<str:title>/create', main_views.map_edit_page, name="map_edit"),
-
     path('map/<str:map_title>/place/create', main_views.place_create_page, name="create_place"),
 
     path('place/<int:img_id>/edit/', main_views.place_edit_page, name='place_edit'),

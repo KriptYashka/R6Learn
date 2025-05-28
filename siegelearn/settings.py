@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'appsite',
     'rest_framework',
+    'django_bootstrap_icons'
 ]
 
 MIDDLEWARE = [

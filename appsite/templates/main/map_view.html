@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load bootstrap_icons %}
 {% block content %}
 <div class="container-md">
   <h1 class="display-5 text-uppercase">{{ map.title }}</h1>
@@ -30,28 +31,19 @@
 
   <!-- Навигация по этажам -->
   <ul class="nav nav-tabs" id="floorTabs" role="tablist">
+    {% for level in levels %}
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="basement-tab" data-bs-toggle="tab" data-bs-target="#basement" type="button" role="tab">Подвал</button>
+      <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{level.0|lower}}-tab" data-bs-toggle="tab" data-bs-target="#level-{{level.0|lower}}" type="button" role="tab">{{level.1}}</button>
     </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="outside-tab" data-bs-toggle="tab" data-bs-target="#outside" type="button" role="tab">Улица</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="f1-tab" data-bs-toggle="tab" data-bs-target="#f1" type="button" role="tab">1 этаж</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="f2-tab" data-bs-toggle="tab" data-bs-target="#f2" type="button" role="tab">2 этаж</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="f3-tab" data-bs-toggle="tab" data-bs-target="#f3" type="button" role="tab">3 этаж</button>
-    </li>
+    {% endfor %}
+
   </ul>
 
   <!-- Контент этажей -->
   <div class="tab-content py-4" id="floorTabsContent">
     {% for level in levels %}
     <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
-         id="{{ level.0 }}"
+         id="level-{{ level.0 }}"
          role="tabpanel"
          aria-labelledby="{{ level.0 }}-tab">
 
@@ -63,7 +55,7 @@
             <img src="/media/{{ level.2.0.first_img.img }}" class="img-fluid opacity-25">
             <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
                     onclick="prevImage('{{ level.0 }}')">
-              <i class="bi bi-chevron-left"></i>
+              {% bs_icon 'chevron-left' %}
             </button>
           </div>
         </div>
@@ -83,7 +75,7 @@
             <img src="/media/{{ level.2.1.first_img.img }}" class="img-fluid opacity-25">
             <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
                     onclick="nextImage('{{ level.0 }}')">
-              <i class="bi bi-chevron-right"></i>
+              {% bs_icon 'chevron-right' %}
             </button>
           </div>
         </div>
@@ -100,22 +92,19 @@
   <!-- Кнопка добавления позиции -->
   <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
     <a class="btn btn-primary" href="/map/{{ map.title|lower }}/place/create">
-      <i class="bi bi-plus-circle"></i> Добавить позицию
+      Добавить позицию
     </a>
   </div>
 </div>
 
 <script>
-// Текущие индексы для каждого этажа
-const currentIndices = {
+  const currentIndices = {
   {% for level in levels %}
-  '{{ level.0 }}': 0,
+  '{{level.0}}': 0,
   {% endfor %}
 };
 
-// Функция для обновления отображения
-function updateFloorDisplay(levelId) {
-  const places = [
+const places = [
     {% for level in levels %}
     {% for place in level.2 %}
     {% if place.first_img %}
@@ -128,20 +117,19 @@ function updateFloorDisplay(levelId) {
     {% endif %}
     {% endfor %}
     {% endfor %}
-  ].filter(p => p.id === levelId);
+  ];
 
+function updateFloorDisplay(levelId) {
   if (places.length === 0) return;
 
   const currentIndex = currentIndices[levelId];
   const currentPlace = places[currentIndex % places.length];
 
-  // Обновляем основное изображение
   document.getElementById(`${levelId}-main-img`).src = currentPlace.img;
-  document.querySelector(`#${levelId} h4`).textContent = currentPlace.name;
-  document.querySelector(`#${levelId} p`).textContent = currentPlace.description;
+  document.querySelector(`#level-${levelId} h4`).textContent = currentPlace.name;
+  document.querySelector(`#level-${levelId} p`).textContent = currentPlace.description;
 }
 
-// Навигация между изображениями
 function nextImage(levelId) {
   currentIndices[levelId]++;
   updateFloorDisplay(levelId);
