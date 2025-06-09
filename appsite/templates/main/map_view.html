@@ -51,13 +51,13 @@
       <div class="row">
         <!-- Левая миниатюра -->
         <div class="col-md-2 d-flex align-items-center">
+          <a onclick="prevImage('{{ level.name }}')" style="cursor: pointer;">
           <div class="position-relative w-100">
-            <img src="/media/{{ level.places.0.first_img.img }}" class="img-fluid opacity-25">
-            <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
-                    onclick="prevImage('{{ level.name }}')">
-              {% bs_icon 'chevron-left' %}
-            </button>
+            <img id="{{level.name}}-prev-img"
+                 src="/media/{{ level.places.0.first_img.img }}"
+                 class="img-fluid opacity-25">
           </div>
+          </a>
         </div>
 
         <!-- Основное изображение -->
@@ -71,13 +71,13 @@
 
         <!-- Правая миниатюра -->
         <div class="col-md-2 d-flex align-items-center">
-          <div class="position-relative w-100">
-            <img src="/media/{{ level.places.1.first_img.img }}" class="img-fluid opacity-25">
-            <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
-                    onclick="nextImage('{{ level.name }}')">
-              {% bs_icon 'chevron-right' %}
-            </button>
-          </div>
+          <a onclick="nextImage('{{ level.name }}')" style="cursor: pointer;">
+            <div class="position-relative w-100">
+              <img id="{{level.name}}-next-img"
+                   src="/media/{{ level.places.1.first_img.img }}"
+                   class="img-fluid opacity-25">
+            </div>
+          </a>
         </div>
       </div>
       {% else %}
@@ -119,24 +119,38 @@ const places = [
     {% endfor %}
   ];
 
+function getLevelIndex(index, delta){
+  index += delta % places.length;
+  if (index < 0){
+    index = places.length - 1;
+  } else if (index >= places.length) {
+    index = index % places.length;
+  }
+
+  return index;
+}
+
 function updateFloorDisplay(levelName) {
   if (places.length === 0) return;
 
-  const currentIndex = currentIndices[levelName];
-  const currentPlace = places[currentIndex % places.length];
+  const currentLevelIndex = currentIndices[levelName];
+  const currentPlace = places[currentLevelIndex];
 
   document.getElementById(`${levelName}-main-img`).src = currentPlace.img;
   document.querySelector(`#level-${levelName} h4`).textContent = currentPlace.name;
   document.querySelector(`#level-${levelName} p`).textContent = currentPlace.description;
+
+  document.getElementById(`${levelName}-prev-img`).src = places[getLevelIndex(currentLevelIndex, 1)].img;
+  document.getElementById(`${levelName}-next-img`).src = places[getLevelIndex(currentLevelIndex, -1)].img;
 }
 
 function nextImage(levelName) {
-  currentIndices[levelName] = (currentIndices[levelName] + 1) % places.length;
+  currentIndices[levelName] = getLevelIndex(currentIndices[levelName], 1);
   updateFloorDisplay(levelName);
 }
 
 function prevImage(levelName) {
-  currentIndices[levelName] = places.length - 1 ? currentIndices[levelName] == 0 : (currentIndices[levelName] - 1);
+  currentIndices[levelName] = getLevelIndex(currentIndices[levelName], -1);
   updateFloorDisplay(levelName);
 }
 </script>
