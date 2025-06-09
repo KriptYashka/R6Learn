@@ -33,7 +33,7 @@
   <ul class="nav nav-tabs" id="floorTabs" role="tablist">
     {% for level in levels %}
     <li class="nav-item" role="presentation">
-      <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{level.0|lower}}-tab" data-bs-toggle="tab" data-bs-target="#level-{{level.0|lower}}" type="button" role="tab">{{level.1}}</button>
+      <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{level.name|lower}}-tab" data-bs-toggle="tab" data-bs-target="#level-{{level.name|lower}}" type="button" role="tab">{{level.label}}</button>
     </li>
     {% endfor %}
 
@@ -43,18 +43,18 @@
   <div class="tab-content py-4" id="floorTabsContent">
     {% for level in levels %}
     <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
-         id="level-{{ level.0 }}"
+         id="level-{{ level.name }}"
          role="tabpanel"
-         aria-labelledby="{{ level.0 }}-tab">
+         aria-labelledby="{{ level.name }}-tab">
 
-      {% if level.2.exists %}
+      {% if level.places.exists %}
       <div class="row">
         <!-- Левая миниатюра -->
         <div class="col-md-2 d-flex align-items-center">
           <div class="position-relative w-100">
-            <img src="/media/{{ level.2.0.first_img.img }}" class="img-fluid opacity-25">
+            <img src="/media/{{ level.places.0.first_img.img }}" class="img-fluid opacity-25">
             <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
-                    onclick="prevImage('{{ level.0 }}')">
+                    onclick="prevImage('{{ level.name }}')">
               {% bs_icon 'chevron-left' %}
             </button>
           </div>
@@ -62,19 +62,19 @@
 
         <!-- Основное изображение -->
         <div class="col-md-8 text-center">
-          <img id="{{ level.0 }}-main-img"
-               src="/media/{{ level.2.0.first_img.img }}"
+          <img id="{{ level.name }}-main-img"
+               src="/media/{{ level.places.0.first_img.img }}"
                class="img-fluid rounded shadow-lg">
-          <h4 class="mt-3">{{ level.2.0.name }}</h4>
-          <p>{{ level.2.0.description }}</p>
+          <h4 class="mt-3">{{ level.places.0.name }}</h4>
+          <p>{{ level.places.0.description }}</p>
         </div>
 
         <!-- Правая миниатюра -->
         <div class="col-md-2 d-flex align-items-center">
           <div class="position-relative w-100">
-            <img src="/media/{{ level.2.1.first_img.img }}" class="img-fluid opacity-25">
+            <img src="/media/{{ level.places.1.first_img.img }}" class="img-fluid opacity-25">
             <button class="btn btn-sm btn-outline-primary position-absolute top-50 start-50 translate-middle rounded-circle"
-                    onclick="nextImage('{{ level.0 }}')">
+                    onclick="nextImage('{{ level.name }}')">
               {% bs_icon 'chevron-right' %}
             </button>
           </div>
@@ -100,16 +100,16 @@
 <script>
   const currentIndices = {
   {% for level in levels %}
-  '{{level.0}}': 0,
+  '{{level.name}}': 0,
   {% endfor %}
 };
 
 const places = [
     {% for level in levels %}
-    {% for place in level.2 %}
+    {% for place in level.places %}
     {% if place.first_img %}
     {
-      id: '{{ level.0 }}',
+      id: '{{ level.name }}',
       name: '{{ place.name }}',
       description: '{{ place.description|escapejs }}',
       img: '/media/{{ place.first_img.img }}'
@@ -119,25 +119,25 @@ const places = [
     {% endfor %}
   ];
 
-function updateFloorDisplay(levelId) {
+function updateFloorDisplay(levelName) {
   if (places.length === 0) return;
 
-  const currentIndex = currentIndices[levelId];
+  const currentIndex = currentIndices[levelName];
   const currentPlace = places[currentIndex % places.length];
 
-  document.getElementById(`${levelId}-main-img`).src = currentPlace.img;
-  document.querySelector(`#level-${levelId} h4`).textContent = currentPlace.name;
-  document.querySelector(`#level-${levelId} p`).textContent = currentPlace.description;
+  document.getElementById(`${levelName}-main-img`).src = currentPlace.img;
+  document.querySelector(`#level-${levelName} h4`).textContent = currentPlace.name;
+  document.querySelector(`#level-${levelName} p`).textContent = currentPlace.description;
 }
 
-function nextImage(levelId) {
-  currentIndices[levelId]++;
-  updateFloorDisplay(levelId);
+function nextImage(levelName) {
+  currentIndices[levelName] = (currentIndices[levelName] + 1) % places.length;
+  updateFloorDisplay(levelName);
 }
 
-function prevImage(levelId) {
-  currentIndices[levelId]--;
-  updateFloorDisplay(levelId);
+function prevImage(levelName) {
+  currentIndices[levelName] = places.length - 1 ? currentIndices[levelName] == 0 : (currentIndices[levelName] - 1);
+  updateFloorDisplay(levelName);
 }
 </script>
 {% endblock %}
