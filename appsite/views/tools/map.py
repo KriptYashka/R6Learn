@@ -3,6 +3,7 @@ from typing import Optional
 
 from django.db import models as dj_models
 from appsite import models
+from appsite.models import MapModel, MapStatsModel
 
 
 class ModelETL:
@@ -105,3 +106,24 @@ class MapPlaceImage(ModelETL):
     def transform(self, instance: models.PlaceImgModel):
         self.img = instance.img
         self.is_spectator = instance.is_spectator
+
+
+def check_forms(form_map, form_map_stats, title):
+    if form_map.is_valid():
+        _title = form_map.data["title"]
+        _img = form_map.files.get("img")
+        map = MapModel.objects.get(title=title)
+        map.name = _title
+        if _img is not None:
+            map.images = _img
+        map.save()
+        title = map.name
+    if form_map_stats.is_valid():
+        _description = form_map.data["description"]
+        _win_atk = form_map.data["win_atk"]
+        map = MapModel.objects.get(title=title)
+        map_stat = MapStatsModel.objects.get(map=map)
+        map_stat.description = _description
+        map_stat.win_atk = _win_atk
+        map_stat.save()
+    return title
