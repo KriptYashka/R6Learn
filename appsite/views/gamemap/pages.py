@@ -23,7 +23,7 @@ def map_create_page(request: WSGIRequest):
 
         instance_map.save()
         instance_map_stats.save()
-        return redirect(f"/gamemap/{instance_map.title.lower()}/info")
+        return redirect(f"/map/{instance_map.title.lower()}/info")
     else:
         context["errors"] = form.errors
     return render(request, template_name, context)
@@ -36,7 +36,7 @@ def map_view_page(request: WSGIRequest, title: str):
     levels = get_map_levels(current_map)
 
     context = {
-        "gamemap": current_map,
+        "map": current_map,
         "levels": levels,
     }
     return render(request, template_name, context)
@@ -66,4 +66,4 @@ def map_edit_page(request: WSGIRequest, title: str):
     form_map, form_map_stats = FormMap(request.POST, request.FILES), FormMapStats(request.POST)
     new_title = check_forms(form_map, form_map_stats, title)
 
-    return redirect(f"/gamemap/edit/{new_title}")
+    return redirect(f"/map/edit/{new_title}")

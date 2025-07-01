@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, redirect
 
 from appsite.models import PlaceModel, PlaceImgModel
 
+from django.urls import reverse
+
 
 def add_place_image(request: WSGIRequest, place_id: int):
     place = get_object_or_404(PlaceModel, id=place_id)
@@ -14,7 +16,7 @@ def add_place_image(request: WSGIRequest, place_id: int):
             is_spectator=request.POST.get("is_spectator", False)
         )
 
-    return redirect('place_edit', img_id=place.id)
+    return redirect(reverse('place_edit'), place_id=place.id)
 
 
 def update_place(request: WSGIRequest, place_id: int):
@@ -27,16 +29,16 @@ def update_place(request: WSGIRequest, place_id: int):
         place.is_layout = 'is_layout' in request.POST
         place.save()
 
-    return redirect('place_edit', img_id=place.id)
+    return redirect('place_edit', place_id=place.id)
 
 
 def set_main_image(request: WSGIRequest, image_id: int):
     image = get_object_or_404(PlaceImgModel, id=image_id)
-    return redirect('place_edit', img_id=image.place.id)
+    return redirect('place_edit', place_id=image.place.id)
 
 
 def delete_place_image(request: WSGIRequest, image_id: int):
     image = get_object_or_404(PlaceImgModel, id=image_id)
     place_id = image.place.id
     image.delete()
-    return redirect('place_edit', img_id=place_id)
+    return redirect('place_edit', place_id=place_id)

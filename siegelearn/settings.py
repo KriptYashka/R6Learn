@@ -38,7 +38,9 @@ ROOT_URLCONF = 'siegelearn.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            "frontend/templates/"
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,10 +87,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'appsite', 'static')
+    os.path.join(BASE_DIR, 'frontend', 'static')
 ]
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'appsite', 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'frontend', 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

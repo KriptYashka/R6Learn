@@ -6,7 +6,7 @@ from appsite import models
 from appsite.models import MapModel, MapStatsModel
 
 
-class ModelETL:
+class ModelDTO:
     model: Optional[dj_models.Model] = None
 
     def __init__(self):
@@ -24,7 +24,7 @@ class ModelETL:
         return model.objects.filter(**kwargs)
 
 
-class Map(ModelETL):
+class Map(ModelDTO):
     model = models.MapModel
 
     def __init__(self):
@@ -52,7 +52,7 @@ class Map(ModelETL):
             self.places.append(place)
 
 
-class MapStats(ModelETL):
+class MapStats(ModelDTO):
     model = models.MapStatsModel
 
     def __init__(self, map_obj: Map):
@@ -68,7 +68,7 @@ class MapStats(ModelETL):
         self.win_atk, self.win_def = instance_stats.win_atk, instance_stats.win_def
 
 
-class MapPlace(ModelETL):
+class MapPlace(ModelDTO):
     model = models.PlaceModel
 
     def __init__(self, map_obj: Map):
@@ -94,7 +94,7 @@ class MapPlace(ModelETL):
         self.is_layout = instance.is_layout
 
 
-class MapPlaceImage(ModelETL):
+class MapPlaceImage(ModelDTO):
     model = models.PlaceImgModel
 
     def __init__(self, map_obj: Map):

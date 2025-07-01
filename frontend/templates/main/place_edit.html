@@ -43,7 +43,7 @@
 
             <div class="form-check form-switch mb-3">
               <input class="form-check-input" type="checkbox" id="is_layout" name="is_layout" {% if place.is_layout %}checked{% endif %}>
-              <label class="form-check-label" for="is_layout">Это планировка?</label>
+              <label class="form-check-label" for="is_layout">Изображение является схемой (вид сверху)</label>
             </div>
           </div>
         </div>
@@ -62,7 +62,7 @@
         </div>
         <div class="card-body">
           <h5 class="card-title">Добавить новое изображение</h5>
-          <form method="post" enctype="multipart/form-data" action="{% url 'add_place_image' place.id %}">
+          <form method="post" enctype="multipart/form-data" action="{% url 'handler_place_add' place.id %}">
             {% csrf_token %}
             <div class="mb-3">
               <input class="form-control" type="file" name="image" accept="image/*" required>
@@ -90,13 +90,13 @@
                   </div>
                 </div>
                 <div class="card-footer bg-transparent">
-                  <form method="post" action="{% url 'delete_place_image' img.id %}" class="d-inline">
+                  <form method="post" action="{% url 'handler_place_img_delete' img.id %}" class="d-inline">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-danger">
                       <i class="bi bi-trash"></i> Удалить
                     </button>
                   </form>
-                  <form method="post" action="{% url 'set_main_image' img.id %}" class="d-inline ms-2">
+                  <form method="post" action="{% url 'handler_place_img_main' img.id %}" class="d-inline ms-2">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-outline-primary">
                       Сделать основной

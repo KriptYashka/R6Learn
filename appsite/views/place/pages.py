@@ -6,9 +6,9 @@ from appsite.models import PlaceModel, MapModel
 from appsite.models.models_map import LevelModel
 
 
-def place_create_page(request: WSGIRequest, map_title: str):
+def place_create_page(request: WSGIRequest, gamemap_title: str):
     template_name = "main/place_create.html"
-    map_obj = get_object_or_404(MapModel, title=map_title.lower())
+    map_obj = get_object_or_404(MapModel, title=gamemap_title.lower())
     context = {
         "map": map_obj,
         "form": FormPlace(),
@@ -19,15 +19,15 @@ def place_create_page(request: WSGIRequest, map_title: str):
         if form.is_valid():
             form.instance.map = map_obj
             form.save()
-            return redirect(f"/map/{map_title}/info")
+            return redirect(f"/map/{gamemap_title}/info")
         context["form"] = form
 
     return render(request, template_name, context)
 
 
-def place_edit_page(request: WSGIRequest, img_id: int):
+def place_edit_page(request: WSGIRequest, place_id: int):
     template_name = "main/place_edit.html"
-    place = get_object_or_404(PlaceModel.objects.prefetch_related('placeimgmodel_set'), id=img_id)
+    place = get_object_or_404(PlaceModel.objects.prefetch_related('placeimgmodel_set'), id=place_id)
 
     context = {
         "place": place,
